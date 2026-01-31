@@ -14,9 +14,12 @@
 
     canvas {
       position: fixed;
-      inset: 0;
-      pointer-events: none;
-      z-index: 2147483647;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none; /* clicks pass through */
+      z-index: 9999;         /* stays visually on top */
     }
   </style>
 </head>
@@ -31,31 +34,28 @@
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
     }
-
     resizeCanvas();
     window.addEventListener('resize', resizeCanvas);
 
     const myConfetti = confetti.create(canvas, {
-      resize: false, // IMPORTANT: we handle resizing ourselves
+      resize: false,
       useWorker: true
     });
 
-    const duration = 3000;
-    const end = Date.now() + duration;
-
-    (function frame() {
+    // Continuous confetti loop
+    function shootConfetti() {
       myConfetti({
-        particleCount: 8,
-        spread: 80,
-        startVelocity: 35,
+        particleCount: 6,
+        spread: 70,
+        startVelocity: 30,
         gravity: 0.9,
         origin: { x: Math.random(), y: 0 }
       });
 
-      if (Date.now() < end) {
-        requestAnimationFrame(frame);
-      }
-    })();
+      requestAnimationFrame(shootConfetti); // keeps going forever
+    }
+
+    shootConfetti(); // start the loop
   </script>
 </body>
 </html>
